@@ -20,28 +20,21 @@ harms surfaced in participatory workshops, then are expanded through:
 
 ## Pipeline
 
-```
-seed taxonomy (household_harm_scenarios_full_v2.json)
-   ├─ taxonomy route:  generate_taxonomy.py       -> raw_pool_taxonomy.json
-   └─ persona route:   build_contrastive_pairs.py -> contrastive_pairs_{inlaw,husband}.json
-                       generate_steered.py         -> steered_pool.json
-                                                      (Llama-3-8B-Instruct, CAA at layer 11)
-
-   both pools -> assemble_benchmark.py  (refusal filter, coherence, semantic dedup,
-                                         per-group variant cap) -> benchmark.json
-
-   validation: validate_vectors.py      (Cohen's d pole separation)
-               compute_diversity.py     (Self-BLEU, Distance_Seed)
-               judge_faithfulness.py    (LLM-judge, decomposed rubric)
-               filter_faithfulness.py   (drop flattened items)
-               -> benchmark_faithful.json
-```
+1. The 13 macro categories were constructed from harms surfaced in participatory workshops with Indian communities across two metropolitan cities. Workshop findings were thematically coded, grouped into harm types, and encoded in `household_harm_scenarios_full_v2.json` as the seed taxonomy. This file is the input to all subsequent steps.
+2. `generate_taxonomy.py` takes the seed taxonomy and produces structurally varied scenarios across severity levels and household configurations.
+3. `build_contrastive_pairs.py` constructs persona contrastive pairs from real voice corpora (in-law and husband poles vs. complainant baseline).
+4. `generate_steered.py` applies CAA steering vectors at layer 11 of Llama-3-8B-Instruct to produce persona-conditioned scenarios.
+5. `assemble_benchmark.py` merges both pools, applies refusal filtering, coherence filtering, and semantic deduplication, and writes the combined benchmark.
+6. `validate_vectors.py` checks steering vector quality via Cohen's d pole separation.
+7. `compute_diversity.py` measures scenario diversity using Self-BLEU and Distance_Seed.
+8. `judge_faithfulness.py` scores each steered scenario against its seed using a decomposed LLM-judge rubric.
+9. `filter_faithfulness.py` removes flattened scenarios, producing the final `benchmark_faithful.json`.
 
 ## Files
 
 All scripts are in one flat directory; imports assume same-folder co-location.
 
-**Core pipeline for Scenario Generation**
+**Core pipeline**
 
 | file | role |
 |---|---|
@@ -85,7 +78,7 @@ Raw scraped corpora are not distributed (privacy / platform ToS).
 - **Diversity**: Self-BLEU and Distance_Seed (per PersonaTeaming).
 - **Faithfulness**: each scenario judged against its seed by an independent
   model using a decomposed rubric (action preserved? still harmful?), following
-  StrongREJECT/HarmBench-style judge design. Flattened items were filtered out.
+  StrongREJECT/HarmBench-style judge design. Flattened items filtered out.
 
 ## Reproducing
 
@@ -112,6 +105,24 @@ python filter_faithfulness.py --benchmark benchmark.json --judged faithfulness.j
 Set the relevant API key(s) before running LLM steps:
 `ANTHROPIC_API_KEY`, `OPENAI_API_KEY`, `SARVAM_API_KEY`.
 
+## Macro Categories
+
+| code | full name |
+|---|---|
+| PRIV | Privacy and Surveillance |
+| SEX | Sexual Harm and Non-Consensual Use |
+| VIO | Physical Violence and Bodily Harm |
+| ELD | Elder Coercion and Exploitation |
+| WORK | Domestic Worker Exploitation |
+| THEFT | Theft and Property Harm |
+| REL | Religious and Cultural Desecration |
+| SUB | Substance-Facilitated Harm |
+| HAZ | Household Hazard Exploitation |
+| FALL | Slip and Fall Engineering |
+| PSY | Psychological and Sensory Harm |
+| PHISH | Phishing, Financial, and Physical Security Bypass |
+| CHILD | Child Safety and Boundary Violations |
+
 ## Composition
 
 | | count |
@@ -124,5 +135,5 @@ Set the relevant API key(s) before running LLM steps:
 
 Faithfulness (steered scenarios, GPT-4o judge, decomposed rubric): 83.7%
 faithful; flattened items removed from the released set. Strongest macros:
-PRIV, CHILD, ELD, THEFT (~88-91%); weakest: SEX (~53%). which we will report as a
-limitation in the final paper. 
+PRIV, CHILD, ELD, THEFT (~88-91%); weakest: SEX (~53%) reported as a
+limitation.
