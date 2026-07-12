@@ -41,7 +41,7 @@ seed taxonomy (household_harm_scenarios_full_v2.json)
 
 All scripts are in one flat directory; imports assume same-folder co-location.
 
-**Core pipeline**
+**Core pipeline for Scenario Generation**
 
 | file | role |
 |---|---|
@@ -85,7 +85,7 @@ Raw scraped corpora are not distributed (privacy / platform ToS).
 - **Diversity**: Self-BLEU and Distance_Seed (per PersonaTeaming).
 - **Faithfulness**: each scenario judged against its seed by an independent
   model using a decomposed rubric (action preserved? still harmful?), following
-  StrongREJECT/HarmBench-style judge design. Flattened items filtered out.
+  StrongREJECT/HarmBench-style judge design. Flattened items were filtered out.
 
 ## Reproducing
 
