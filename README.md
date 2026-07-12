@@ -124,5 +124,5 @@ Set the relevant API key(s) before running LLM steps:
 
 Faithfulness (steered scenarios, GPT-4o judge, decomposed rubric): 83.7%
 faithful; flattened items removed from the released set. Strongest macros:
-PRIV, CHILD, ELD, THEFT (~88-91%); weakest: SEX (~53%) reported as a
-limitation.
+PRIV, CHILD, ELD, THEFT (~88-91%); weakest: SEX (~53%). which we will report as a
+limitation in the final paper. 
