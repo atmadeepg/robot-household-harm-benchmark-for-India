@@ -1,0 +1,36 @@
+# raw scraped data — not distributed (privacy / platform ToS)
+aita_docs.json
+reddit_docs*.json
+india_only_docs.json
+forum_docs.json
+personas_raw.json
+personas_labeled*.json
+
+# derived persona corpora
+extracted_*_quotes*.json
+inlaw_quotes_final.json
+neutral_baseline.json
+
+# model artifacts / caches
+*.pt
+__pycache__/
+*.pyc
+
+# secrets
+.env
+*api_key*
+
+# intermediate pools / sweeps / old versions
+sweep_*.json
+sample_*.json
+*_sweep_*.json
+llama_sample.json
+raw_pool_steered*.json
+steered_pool_v2*.json
+benchmark_final*.json
+
+# logs
+*.log
+
+.DS_Store
+Thumbs.db
